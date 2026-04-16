@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  web:
+    container_name: fastapi_app
+    build: .
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflare_tunnel
+    restart: always
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}      
