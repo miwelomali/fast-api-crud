@@ -62,6 +62,6 @@ if __name__ == "__main__":
     uvicorn.run(app, host="localhost", port=8000)
 
 # DONE Python Project
-# TODO Dockerize project
-# TODO Production release project
+# DONE Dockerize project
 # TODO SSL/DNS manage project
+# TODO Production release project
