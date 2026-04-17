@@ -63,5 +63,8 @@ if __name__ == "__main__":
 
 # DONE Python Project
 # DONE Dockerize project
-# TODO SSL/DNS manage project
-# TODO Production release project
+# DONE SSL/DNS manage project
+# DONE Production release project
+# TODO CI/CD w/ Dagger
+# TODO k8s w/ Argo CD
+# TODO Project folder organization
