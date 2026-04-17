@@ -16,6 +16,10 @@ services:
     environment:
       - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}  
     command: tunnel --no-autoupdate run
+    dns: 
+      - 1.1.1.1
+    networks:
+      - cloudflare    
 networks:
   cloudflare:
     driver: bridge
