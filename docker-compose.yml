@@ -1,13 +1,19 @@
 version: "3.8"
 
 services:
-  web:
-    container_name: fastapi_app
+  app:
+    container_name: fastapi-app
     build: .
-  cloudflared:
+    expose:
+      - "8080"
+    networks:
+      - cloudflare  
+  tunnel:
     image: cloudflare/cloudflared:latest
-    container_name: cloudflare_tunnel
-    restart: always
-    command: tunnel run
+    container_name: fast-api-tunnel
+    restart: unless-stopped
     environment:
-      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}      
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}  
+    command: tunnel --no-autoupdate run
+    networks:
+      - cloudflare   
