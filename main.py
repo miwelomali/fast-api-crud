@@ -59,7 +59,7 @@ def delete_item(item_id: str):
 
 # Run the FastAPI server
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8080)
 
 # DONE Python Project
 # DONE Dockerize project
