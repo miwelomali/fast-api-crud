@@ -65,6 +65,7 @@ if __name__ == "__main__":
 # DONE Dockerize project
 # DONE SSL/DNS manage project
 # DONE Production release project
-# TODO CI/CD w/ Dagger
+# TODO Project change locations into folders
+# TODO TEST Casing w/ Dagger
+# TODO CI/CD w/ Dagger and Github actions
 # TODO k8s w/ Argo CD
-# TODO Project folder organization
