@@ -43,6 +43,6 @@ def delete_item(item_id: str):
 # DONE SSL/DNS manage project
 # DONE Production release project
 # DONE Project change locations into folders
-# TODO TEST Casing w/ Dagger
+# DONE TEST Casing w/ Dagger
 # TODO CI/CD w/ Dagger and Github actions
 # TODO k8s w/ Argo CD
