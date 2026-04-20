@@ -6,7 +6,21 @@ services:
     expose:
       - "8080"
     networks:
-      - cloudflare  
+      - cloudflare
+
+  dagger:
+    image: python:3.14-slim
+    container_name: dagger-tests
+    working_dir: /src
+    volumes:
+      - .:/src
+    command: >
+      sh -c "pip install -r requirements.txt &&
+            pip install dagger-io pytest httpx &&
+            python dagger/pipeline.py"
+    networks:
+    - cloudflare
+
   tunnel:
     image: cloudflare/cloudflared:latest
     container_name: fast-api-tunnel

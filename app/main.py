@@ -1,71 +1,48 @@
-# Step 1: Import necessary modules
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import uvicorn
-import uuid
+from uuid import uuid4
 
-# Step 2: Create the FastAPI instance
+# Import from the app package
+from app.schemas import ItemCreate, Item
+from app.storage import Items
+
 app = FastAPI()
 
-# Step 3: Create the data models
-class ItemCreate(BaseModel):
-    name: str
-    description: str
-
-class Item(BaseModel):
-    id: str
-    name: str
-    description: str
-
-# Step 4: In-memory storage
-Items = {}
-
-# Create CRUD methods
-# POST
 @app.post("/items/")
 def create_item(item: ItemCreate):
-    item_id = str(uuid.uuid4())
-    new_Item = Item(id=item_id, **item.model_dump())
-    Items[item_id] = new_Item
-    return {"message": "Item created", "item": new_Item}
+    item_id = str(uuid4())
+    new_item = Item(id=item_id, **item.model_dump())
+    Items[item_id] = new_item
+    return {"message": "Item created", "item": new_item}
 
-# READ all items
 @app.get("/items/")
 def read_items():
     return {"items": list(Items.values())}
 
-# READ single item
 @app.get("/items/{item_id}")
 def read_item(item_id: str):
-    if not item_id in Items:
+    if item_id not in Items:
         raise HTTPException(status_code=404, detail="Item not found")
     return {"item": Items[item_id]}
 
-# UPDATE single item
 @app.put("/items/{item_id}")
 def update_item(item_id: str, item: Item):
-    if not item_id in Items:
+    if item_id not in Items:
         raise HTTPException(status_code=404, detail="Item not found")
     Items[item_id] = item
     return {"message": "Item Updated", "item": item}
 
-# DELETE
 @app.delete("/items/{item_id}")
 def delete_item(item_id: str):
-    if not item_id in Items:
+    if item_id not in Items:
         raise HTTPException(status_code=404, detail="Item not found")
     deleted_item = Items.pop(item_id)
     return {"message": "Item Deleted", "item": deleted_item}
-
-# Run the FastAPI server
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8080)
 
 # DONE Python Project
 # DONE Dockerize project
 # DONE SSL/DNS manage project
 # DONE Production release project
-# TODO Project change locations into folders
+# DONE Project change locations into folders
 # TODO TEST Casing w/ Dagger
 # TODO CI/CD w/ Dagger and Github actions
 # TODO k8s w/ Argo CD

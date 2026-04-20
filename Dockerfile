@@ -3,7 +3,6 @@ FROM python:3.14.4-alpine3.23
 # Install pip dependencies
 RUN apk add --no-cache gcc musl-dev libffi-dev
 
-
 WORKDIR /app
 
 COPY requirements.txt .
@@ -15,4 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 #Running command for the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
