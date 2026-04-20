@@ -1,38 +1,38 @@
 services:
   app:
-    container_name: fastapi-app
     build:
       context: .
+      dockerfile: docker/Dockerfile.app
+    container_name: fastapi-app
     expose:
       - "8080"
     networks:
       - cloudflare
 
   dagger:
-    image: python:3.14-slim
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dagger
     container_name: dagger-tests
     working_dir: /src
     volumes:
       - .:/src
-    command: >
-      sh -c "pip install -r requirements.txt &&
-            pip install dagger-io pytest httpx &&
-            python dagger/pipeline.py"
     networks:
-    - cloudflare
+      - cloudflare
 
-  tunnel:
-    image: cloudflare/cloudflared:latest
-    container_name: fast-api-tunnel
+  cloudflared:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.cloudflared
+    container_name: cloudflared-tunnel
     restart: unless-stopped
     environment:
-      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}  
-    command: tunnel --no-autoupdate run
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
     dns: 
       - 1.1.1.1
     networks:
-      - cloudflare    
+      - cloudflare 
+
 networks:
   cloudflare:
     driver: bridge
-

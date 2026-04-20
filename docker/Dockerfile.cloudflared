@@ -1,0 +1,20 @@
+# Stage 1: Build cloudflared binary
+FROM golang:1.26-alpine AS builder
+
+WORKDIR /src
+RUN apk add --no-cache git
+
+# Fetch and build cloudflared
+RUN git clone https://github.com/cloudflare/cloudflared.git .
+RUN go build -o /cloudflared ./cmd/cloudflared
+
+# Stage 2: Distroless runtime
+FROM gcr.io/distroless/base-debian13:latest
+
+WORKDIR /app
+
+# Copy binary from builder
+COPY --from=builder /cloudflared /usr/local/bin/cloudflared
+
+# Default command (adjust tunnel args as needed)
+CMD ["cloudflared", "tunnel", "--no-autoupdate", "run"]

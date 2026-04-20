@@ -1,5 +1,5 @@
 {
     "name": "fast-api-crud",
     "sdk": "python",
-    "source": "dagger/pipeline.py"
+    "source": "dagger/case_test_pipeline.py"
 }
