@@ -1,5 +1,6 @@
 fastapi
-uvicorn
-pydantic
-httpx
+uvicorn[standard]
+anyio
+dagger-io
 pytest
+httpx

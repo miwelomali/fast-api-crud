@@ -1,30 +1,28 @@
-# Stage 1: Build with python-alpine
-FROM python:3.14.4-alpine3.23 AS builder
-
-# Install build dependencies
-RUN apk add --no-cache gcc musl-dev libffi-dev
+# Stage 1: MUST match the Distroless Python version (3.13)
+FROM python:3.13-slim-trixie AS builder
 
 WORKDIR /app
 
-# Copy requirements and install into a separate folder
 COPY requirements.txt .
 RUN pip install --upgrade pip \
-    && pip install --no-cache-dir --prefix=/install -r requirements.txt
+    && pip install --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir fastapi uvicorn[standard]
 
-# Copy application code
 COPY . .
 
-# Stage 2: Run distroless python app
+# Stage 2: Distroless (Debian 13 comes with Python 3.13)
 FROM gcr.io/distroless/python3-debian13:latest
 
 WORKDIR /app
 
-# Copy installed packages and app from builder
-COPY --from=builder /install /usr/local
+# Copy from builder (Note the 3.13 in the path)
+COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /app /app
 
-# Expose port
+ENV PYTHONPATH=/usr/local/lib/python3.13/site-packages
+
 EXPOSE 8080
 
-# Run the app with uvicorn
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+

@@ -8,17 +8,7 @@ services:
       - "8080"
     networks:
       - cloudflare
-
-  dagger:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.dagger
-    container_name: dagger-tests
-    working_dir: /src
-    volumes:
-      - .:/src
-    networks:
-      - cloudflare
+    restart: always
 
   cloudflared:
     build:
@@ -27,11 +17,10 @@ services:
     container_name: cloudflared-tunnel
     restart: unless-stopped
     environment:
-      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
-    dns: 
-      - 1.1.1.1
+      CLOUDFLARE_TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    command: ["--token", "${CLOUDFLARE_TUNNEL_TOKEN}"]
     networks:
-      - cloudflare 
+      - cloudflare
 
 networks:
   cloudflare:
